@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+/// 管理平台用户
+model nm_users {
+    id            String   @id @default(uuid())
+    username      String? /// 用户名
+    role          String /// 角色
+    head_portrait String? /// 头像
+    email         String?  @unique ///邮箱
+    created_at    DateTime @default(now())
+    updated_at    DateTime @default(now()) @updatedAt
+    created_by    String? /// 由谁创建
+    status        Int      @default(1) /// 0为禁用，1为启动
+    updated_by    String? /// 由谁更新
+
+    @@index([status])
+    @@index([role])
+}
+
+/// 管理平台用户
+model nm_users_back {
+    id            String   @id @default(uuid())
+    nm_user_id    String /// nm_user表的id
+    username      String? /// 用户名
+    role          String /// 角色
+    head_portrait String? /// 头像
+    email         String? ///邮箱
+    created_at    DateTime @default(now())
+    updated_at    DateTime @default(now()) @updatedAt
+    created_by    String? /// 由谁创建
+    status        Int      @default(1) /// 0为禁用，1为启动
+    updated_by    String? /// 由谁更新
+    deleted_at    DateTime @default(now()) /// 删除时间
+    deleted_by    String /// 删除人员的id
+
+    @@index([status])
+    @@index([role])
+    @@index([email])
+}
+
+/// 每日食补
+model daily_dietary {
+    id             String    @id @default(uuid())
+    title          String? /// 文章名称
+    solar_term     String? /// 农历节气
+    lunar_calendar String? /// 农历
+    lunar_festival String? /// 农历节日
+    cover          String? /// 封面图
+    summary        String?   @db.Text /// 摘要
+    content        String?   @db.LongText /// 文章内容
+    has_video      Boolean   @default(false) /// 用无视频通过检查符文本获取
+    effect_date    String? /// 生效日期，年月日 查询排序用这个
+    views          BigInt    @default(0) /// 阅读量
+    created_at     DateTime  @default(now())
+    updated_at     DateTime  @default(now()) @updatedAt
+    created_by     String? /// 由谁创建
+    status         Int       @default(1) /// 0新建 1草稿 2发布 3下架 4编辑中
+    updated_by     String? /// 由谁更新
+    published_at   DateTime? /// 发布时间
+    published_by   String? /// 发布人
+}
+
+/// 健康养生分类
+model health_classification {
+    id         String   @id @default(uuid())
+    name       String   @unique
+    created_at DateTime @default(now())
+    updated_at DateTime @default(now()) @updatedAt
+    created_by String? /// 由谁创建
+    updated_by String? /// 由谁更新
+    health     health[]
+}
+
+model health {
+    id           String    @id @default(uuid())
+    title        String? /// 文章名称
+    cover        String? /// 封面图
+    summary      String?   @db.Text /// 摘要
+    content      String?   @db.LongText /// 文章内容
+    has_video    Boolean   @default(false) /// 用无视频通过检查符文本获取
+    views        BigInt    @default(0) /// 阅读量
+    created_at   DateTime  @default(now())
+    updated_at   DateTime  @default(now()) @updatedAt
+    created_by   String? /// 由谁创建
+    status       Int       @default(1) /// 0新建 1草稿 2发布 3下架 4编辑中
+    updated_by   String? /// 由谁更新
+    published_at DateTime? /// 发布时间
+    published_by String? /// 发布人
+
+    health_classification    health_classification? @relation(fields: [health_classification_id], references: [id])
+    health_classification_id String?
+}

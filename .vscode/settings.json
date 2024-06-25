@@ -1,0 +1,26 @@
+{
+	// << eslint
+	"eslint.enable": true,
+	"eslint.alwaysShowStatus": true,
+	// >> eslint
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true,
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	}, // 默认使用非 prettier 格式化
+	// 按 "Tab" 时插入空格。
+	"editor.insertSpaces": false,
+	// 一个制表符等于的空格数。 
+	"editor.tabSize": 4,
+	// 将在视区宽度处换行
+	"editor.wordWrap": "on",
+	"files.associations": {
+		".env.js": "javascript",
+		".env.example.js": "javascript"
+	},
+	"[markdown]":{
+		"editor.insertSpaces": true
+	},
+	"prettier.enable": false
+}
